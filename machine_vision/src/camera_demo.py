@@ -18,6 +18,9 @@ def process_frame(color_image, depth_meters):
     # Make a black-and-white image: nearby pixels are white (255).
     mask = nearby.astype(np.uint8) * 255
 
+    # Find the outlines. cv2.findContours() traces the outer edge of each connected white region.
+    # The loop keeps outlines that enclose at least 1000 square pixels so tiny specks get skipped.
+
     # Find the outer outline of each white region.
     contours, _ = cv2.findContours(
         mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
@@ -25,8 +28,10 @@ def process_frame(color_image, depth_meters):
 
     result = color_image.copy()
 
+    # Draw the boxes. For each outline that passes, cv2.boundingRect() finds a rectangle that fits around it.
+    # The function draws that rectangle on a copy of the color image and returns it for display.
     for contour in contours:
-        if cv2.contourArea(contour) >= 1000:  # Ignore small specks.
+        if cv2.contourArea(contour) >= 1000:  # Loop keep outlines that enclose at least 1k square pixels
             x, y, width, height = cv2.boundingRect(contour)
             cv2.rectangle(result, (x, y), (x + width, y + height), (0, 255, 0), 2)
 
