@@ -1,6 +1,13 @@
+import sys
+import torch
 import cv2
 import numpy as np
 import pyrealsense2 as rs
+from ultralytics import YOLO
+
+print("Python path:", sys.executable)
+print("All imports successful!")
+print("GPU available:", torch.cuda.is_available())
 
 # Draws a green box around a nearby object
 
